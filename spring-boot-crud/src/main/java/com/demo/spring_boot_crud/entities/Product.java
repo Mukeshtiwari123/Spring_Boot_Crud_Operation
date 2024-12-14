@@ -11,7 +11,7 @@ import jakarta.persistence.ManyToOne;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long product_id;
 
     private String name;
     private double price;
@@ -22,13 +22,15 @@ public class Product {
 
     
     
+    
     // Getters and Setters
-	public Long getId() {
-		return id;
+	
+    public Long getProduct_id() {
+		return product_id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setProduct_id(Long product_id) {
+		this.product_id = product_id;
 	}
 
 	public String getName() {
@@ -69,10 +71,8 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", price=" + price + ", category=" + category + "]";
+		return "Product [product_id=" + product_id + ", name=" + name + ", price=" + price + ", category=" + category
+				+ "]";
 	}
-
-  
-    
     
 }

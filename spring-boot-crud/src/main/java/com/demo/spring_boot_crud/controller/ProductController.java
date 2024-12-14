@@ -3,55 +3,61 @@ package com.demo.spring_boot_crud.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.demo.spring_boot_crud.entities.Product;
 import com.demo.spring_boot_crud.service.ProductService;
 
+@RestController
+@RequestMapping("/api/products")
 public class ProductController {
 
-	
-	@Autowired
+    @Autowired
     private ProductService productService;
 
-    // Get all courses
+    // Get all products
     @GetMapping
     public ResponseEntity<List<Product>> getProducts() {
-        List<Product> category = productService.getProducts();
-        return ResponseEntity.ok(category);
+        List<Product> products = productService.getProducts();
+        return ResponseEntity.ok(products);
     }
 
-    // Get a course by ID
+    // Get paginated products
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Product>> getPaginatedProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Product> paginatedProducts = productService.getAllProducts(page, size);
+        return ResponseEntity.ok(paginatedProducts);
+    }
+
+    // Get a product by ID
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProducts(@PathVariable long id) {
-    	Product category = productService.getProducts(id);
-        return ResponseEntity.ok(category);
+        Product product = productService.getProducts(id);
+        return ResponseEntity.ok(product);
     }
 
-    // Add a new course
+    // Add a new product
     @PostMapping
-    public ResponseEntity<Product> addProduct(@RequestBody Product category) {
-    	Product savedCategory = productService.addProduct(category);
-        return ResponseEntity.ok(savedCategory);
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+        Product savedProduct = productService.addProduct(product);
+        return ResponseEntity.ok(savedProduct);
     }
 
-    // Update a course
+    // Update a product
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable long id, @RequestBody Product categoryDetails) {
-    	Product updatedCategory = productService.updateProduct(categoryDetails);
-        return ResponseEntity.ok(updatedCategory);
+    public ResponseEntity<Product> updateProduct(@PathVariable long id, @RequestBody Product productDetails) {
+        Product updatedProduct = productService.updateProduct(productDetails);
+        return ResponseEntity.ok(updatedProduct);
     }
 
-    // Delete a course
+    // Delete a product
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
-    	productService.deleteProduct(id);
+        productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 }

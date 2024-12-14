@@ -3,49 +3,59 @@ package com.demo.spring_boot_crud.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.demo.spring_boot_crud.entities.Category;
 import com.demo.spring_boot_crud.repository.CategoryRepository;
 import com.demo.spring_boot_crud.service.CategoryService;
 
-public class CategoryServiceImpl implements CategoryService{
-	
-	@Autowired
-	private CategoryRepository categoryRepository;
+@Service
+public class CategoryServiceImpl implements CategoryService {
 
-	@Override
-	public List<Category> getCategories() {
-		return categoryRepository.findAll();
-	}
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-	@Override
-	public Category getcategory(long categoryId) {
-		return categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new RuntimeException("Course not found with id: " + categoryId));
-	}
+    @Override
+    public Page<Category> getAllCategories(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return categoryRepository.findAll(pageable);
+    }
 
-	@Override
-	public Category addcategory(Category category) {
-		return categoryRepository.save(category);
-	}
+    @Override
+    public List<Category> getCategories() {
+        return categoryRepository.findAll();
+    }
 
-	@Override
-	public Category updatecategory(Category categoryDetails) {
-		Category existingCategory = categoryRepository.findById(categoryDetails.getId())
-	            .orElseThrow(() -> new RuntimeException("Course not found with id: " + categoryDetails.getId()));
+    @Override
+    public Category getcategory(long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
+    }
 
-	    // Update fields of the course
-		existingCategory.setName(categoryDetails.getName());
-		//existingCategory.setDescription(categoryDetails.getDescription());
-		return categoryRepository.save(existingCategory);
-	}
+    @Override
+    public Category addcategory(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
+    public Category updatecategory(long id, Category categoryDetails) {
+        Category existingCategory = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+
+        // Update fields of the category
+        existingCategory.setName(categoryDetails.getName());
+        return categoryRepository.save(existingCategory);
+    }
 
 
-	@Override
-	public void deletecategory(long categoryId) {
-		Category category = categoryRepository.findById(categoryId)
-				.orElseThrow(() -> new RuntimeException("Course not found with id: " + categoryId));
+    @Override
+    public void deletecategory(long categoryId) {
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + categoryId));
 
-		categoryRepository.delete(category);
-	}
+        categoryRepository.delete(category);
+    }
 }

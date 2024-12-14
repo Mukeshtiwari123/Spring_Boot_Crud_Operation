@@ -13,7 +13,7 @@ import jakarta.persistence.OneToMany;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long category_id;
 
     private String name;
 
@@ -21,14 +21,15 @@ public class Category {
     private List<Product> products;
 
     
-    // Getters and Setters
     
-	public Long getId() {
-		return id;
+
+    // Getters and Setters
+	public Long getCategory_id() {
+		return category_id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setCategory_id(Long category_id) {
+		this.category_id = category_id;
 	}
 
 	public String getName() {
@@ -60,9 +61,8 @@ public class Category {
 
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", products=" + products + "]";
+		return "Category [category_id=" + category_id + ", name=" + name + ", products=" + products + "]";
 	}
 
-   
-    
+	    
 }

@@ -3,61 +3,66 @@ package com.demo.spring_boot_crud.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import com.demo.spring_boot_crud.entities.Category;
+import org.springframework.web.bind.annotation.*;
 
+import com.demo.spring_boot_crud.entities.Category;
 import com.demo.spring_boot_crud.service.CategoryService;
 
 @RestController
 @RequestMapping("/api/category")
 public class CategoryController {
-	@Autowired
 
+    @Autowired
     private final CategoryService categoryService;
 
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
-    // Get all category
+
+    // Get all categories
     @GetMapping
     public ResponseEntity<List<Category>> getCategories() {
-        List<Category> category = categoryService.getCategories();
-        return ResponseEntity.ok(category);
+        List<Category> categories = categoryService.getCategories();
+        return ResponseEntity.ok(categories);
     }
 
-    // Get a course by ID
+    // Get paginated categories
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Category>> getPaginatedCategories(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<Category> paginatedCategories = categoryService.getAllCategories(page, size);
+        return ResponseEntity.ok(paginatedCategories);
+    }
+
+    // Get a category by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getcategory(@PathVariable long id) {
-    	Category category = categoryService.getcategory(id);
+    public ResponseEntity<Category> getCategory(@PathVariable long id) {
+        Category category = categoryService.getcategory(id);
         return ResponseEntity.ok(category);
     }
 
-    // Add a new course
+    // Add a new category
     @PostMapping
-    public ResponseEntity<Category> addcategory(@RequestBody Category category) {
-    	Category savedCategory = categoryService.addcategory(category);
+    public ResponseEntity<Category> addCategory(@RequestBody Category category) {
+        Category savedCategory = categoryService.addcategory(category);
         return ResponseEntity.ok(savedCategory);
     }
 
-    // Update a course
+    // Update a category
     @PutMapping("/{id}")
-    public ResponseEntity<Category> updatecategory(@PathVariable long id, @RequestBody Category categoryDetails) {
-    	Category updatedCategory = categoryService.updatecategory(categoryDetails);
+    public ResponseEntity<Category> updateCategory(@PathVariable long id, @RequestBody Category categoryDetails) {
+        Category updatedCategory = categoryService.updatecategory(id, categoryDetails);
         return ResponseEntity.ok(updatedCategory);
     }
 
-    // Delete a course
+
+    // Delete a category
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletecategory(@PathVariable long id) {
-    	categoryService.deletecategory(id);
+    public ResponseEntity<Void> deleteCategory(@PathVariable long id) {
+        categoryService.deletecategory(id);
         return ResponseEntity.noContent().build();
     }
 }
